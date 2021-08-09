@@ -1,29 +1,38 @@
 import { Client, Message } from "discord.js";
 
-interface IMessageHandler {
-  readonly type: string;
-  readonly message: Message;
+interface IHandler {
+  operation(): string;
 }
 
-abstract class MessageHandler implements IMessageHandler {
-  abstract readonly type: string;
-  abstract readonly message: Message;
-  abstract getAnswer(Client, any): void
-}
-
-class PingHandler extends MessageHandler {
-  type: string;
-  message: Message;
-
-  constructor(handlerType: string, message: Message) {
-    super();
-    this.type = handlerType;
-    this.message = message
+abstract class HandlerCreator {
+  public abstract factoryMethod(): IHandler;
+  public someOperation(): string {
+    const handler =this.factoryMethod();
+    return handler.operation()
   }
-  getAnswer(client: Client, channel: any) {
-    const data: string = 'pong'
-    console.log(data)
-    this.message.reply(data)
+}
+
+class PingHandlerCreator extends HandlerCreator {
+  public factoryMethod(): IHandler {
+    return new PingHandler();
+  }
+}
+
+class PongHandlerCreator extends HandlerCreator {
+  public factoryMethod(): IHandler {
+    return new PongHandler();
+  }
+}
+
+class PingHandler implements IHandler {
+  public operation(): string {
+    return 'pong'
+  }
+}
+
+class PongHandler implements IHandler{
+  public operation(): string {
+    return 'ping'
   }
 }
 
@@ -39,18 +48,21 @@ export class Bot {
   public listen(): Promise<string> {
 
     this.client.on('message', (message: Message) => {
-      let handler: MessageHandler;
+
+
       switch (message.content) {
-        case 'ping':
-          handler = new PingHandler('ping', message);
-          handler.getAnswer(this.client, message.channel)
+        case 'ping': {
+          const handler = new PingHandlerCreator()
+          console.log(handler.someOperation())
           break
-        case 'pong':
-          handler = new PingHandler('pong', message);
-          handler.getAnswer(this.client, message.channel)
+        }
+        case 'pong': {
+          const handler = new PongHandlerCreator()
+          console.log(handler.someOperation())
+          break
+        }
       }
       console.log("Message received! Contents: ", message.content);
-      console.log(handler)
     });
 
     this.client.on('ready', () => {
