@@ -30,6 +30,8 @@ class DefaultHandler implements IMessageHandler {
 class PingHandler implements IMessageHandler {
   public async doAlgorithm(client: Client, message: Message) {
     await message.reply('pong');
+    await message.author.send(`pong ${message.author.toString()}`);
+    await message.channel.send('pong')
   }
 }
 
@@ -39,4 +41,4 @@ class PongHandler implements IMessageHandler {
   }
 }
 
-export {Context, IMessageHandler, PingHandler, PongHandler, DefaultHandler}
+export { Context, IMessageHandler, PingHandler, PongHandler, DefaultHandler }

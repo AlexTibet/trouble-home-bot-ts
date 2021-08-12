@@ -1,5 +1,5 @@
 import { Client, Message } from "discord.js";
-import {Context, DefaultHandler, PingHandler, PongHandler} from '../handlers'
+import { Context, DefaultHandler, PingHandler, PongHandler } from '../handlers'
 
 export class Bot {
   private readonly client: Client;
@@ -13,25 +13,42 @@ export class Bot {
   public listen(): Promise<string> {
 
     this.client.on('message', (message: Message) => {
+
+      if (message.author.bot) {
+        return;
+      }
+
       console.log("Message received! Contents: ", message.content);
 
-      let handler = new DefaultHandler();
+      let handler = new Context(new DefaultHandler());
 
       if (message.content === 'ping') {
-        handler = new PingHandler();
+        handler.setHandler(new PingHandler());
       }
       else if (message.content === 'pong') {
-        handler = new PongHandler();
+        handler.setHandler(new PongHandler());
       }
 
-      const context = new Context(handler);
-      context.doProcessing(this.client, message);
-    })
-
-    this.client.on('ready', () => {
-      console.log('I am ready!');
+      handler.doProcessing(this.client, message);
     });
 
+    this.client.on('ready', () => {
+      console.log(`I am ready!\n${ this.client.user.username } run in:`);
+
+      for (const guild of this.client.guilds.cache) {
+        console.log(`\t${guild[1].name} with ${guild[1].memberCount} users`)
+      }
+      this.client.user.setActivity({name: 'name', type: 'WATCHING'})
+        .then(r =>{ console.log(`Set status: ${ r.status }, ${ r.activities }`) });
+    });
+
+    this.client.on('warn', (w) => {
+      console.warn(`WARNING info: ${ w }`)
+    })
+
+    this.client.on('error', (e) => {
+      console.error(`ERROR info: ${ e }`)
+    })
 
     return this.client.login(this.token);
   };
