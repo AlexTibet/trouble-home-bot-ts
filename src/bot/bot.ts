@@ -1,5 +1,6 @@
 import { Client, Message } from "discord.js";
-import { Context, DefaultHandler, PingHandler, PongHandler } from '../handlers'
+import handlers from '../handlers'
+
 
 export class Bot {
   private readonly client: Client;
@@ -18,18 +19,16 @@ export class Bot {
         return;
       }
 
-      console.log("Message received! Contents: ", message.content);
+      // let handler = new Context(new DefaultHandler());
+      //
+      // if (message.content === 'ping') {
+      //   handler.setHandler(new PingHandler());
+      // }
+      // else if (message.content === 'pong') {
+      //   handler.setHandler(new PongHandler());
+      // }
 
-      let handler = new Context(new DefaultHandler());
-
-      if (message.content === 'ping') {
-        handler.setHandler(new PingHandler());
-      }
-      else if (message.content === 'pong') {
-        handler.setHandler(new PongHandler());
-      }
-
-      handler.doProcessing(this.client, message);
+      // handler.doProcessing(this.client, message);
     });
 
     this.client.on('ready', () => {
