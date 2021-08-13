@@ -1,7 +1,5 @@
-import base from "./base";
-import game from './game'
+import * as baseHandlers from "./base";
 
-export default [
-  ...base,
-  ...game,
-]
+export default {
+  ...baseHandlers
+}

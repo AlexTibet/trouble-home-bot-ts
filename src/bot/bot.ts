@@ -1,5 +1,6 @@
 import { Client, Message } from "discord.js";
-import handlers from '../handlers'
+import baseHandlers from '../handlers'
+import gameHandlers from '../handlers/game'
 
 
 export class Bot {
@@ -19,16 +20,16 @@ export class Bot {
         return;
       }
 
-      // let handler = new Context(new DefaultHandler());
-      //
-      // if (message.content === 'ping') {
-      //   handler.setHandler(new PingHandler());
-      // }
-      // else if (message.content === 'pong') {
-      //   handler.setHandler(new PongHandler());
-      // }
+      let handler = new baseHandlers.Context(new baseHandlers.DefaultHandler());
 
-      // handler.doProcessing(this.client, message);
+      if (message.content === 'ping') {
+        handler.setHandler(new gameHandlers.PingHandler());
+      }
+      else if (message.content === 'pong') {
+        handler.setHandler(new gameHandlers.PongHandler());
+      }
+
+      handler.doProcessing(this.client, message);
     });
 
     this.client.on('ready', () => {
