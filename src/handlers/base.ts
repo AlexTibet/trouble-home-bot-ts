@@ -1,7 +1,7 @@
 import { Client, Message } from "discord.js";
 import { IMessageHandler } from "./interfaces";
 
-export class Context {
+export class Handler {
   private handler: IMessageHandler;
 
   constructor(handler: IMessageHandler) {
@@ -13,12 +13,12 @@ export class Context {
   }
 
   public doProcessing(client: Client, message: Message): void {
-    this.handler.doAlgorithm(client, message);
+    this.handler.doProcessing(client, message);
   }
 }
 
 export class DefaultHandler implements IMessageHandler {
-  public async doAlgorithm(client: Client, message: Message) {
+  public async doProcessing(client: Client, message: Message) {
     console.log(`Message: ${message.content} not processed`)
   }
 }

@@ -20,7 +20,7 @@ export class Bot {
         return;
       }
 
-      let handler = new baseHandlers.Context(new baseHandlers.DefaultHandler());
+      let handler = new baseHandlers.Handler(new baseHandlers.DefaultHandler());
 
       if (message.content === 'ping') {
         handler.setHandler(new gameHandlers.PingHandler());
