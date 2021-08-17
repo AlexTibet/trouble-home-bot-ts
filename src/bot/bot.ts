@@ -1,7 +1,7 @@
 import { Client, Message } from "discord.js";
 import baseHandlers from '../handlers'
 import gameHandlers from '../handlers/game'
-
+import {MessageHandler} from "../handlers/base";
 
 export class Bot {
   private readonly client: Client;
@@ -15,21 +15,7 @@ export class Bot {
   public listen(): Promise<string> {
 
     this.client.on('message', (message: Message) => {
-
-      if (message.author.bot) {
-        return;
-      }
-
-      let handler = new baseHandlers.Handler(new baseHandlers.DefaultHandler());
-
-      if (message.content === 'ping') {
-        handler.setHandler(new gameHandlers.PingHandler());
-      }
-      else if (message.content === 'pong') {
-        handler.setHandler(new gameHandlers.PongHandler());
-      }
-
-      handler.doProcessing(this.client, message);
+      MessageHandler.doProcessing(this.client, message);
     });
 
     this.client.on('ready', () => {

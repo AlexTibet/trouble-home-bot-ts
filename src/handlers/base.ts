@@ -1,5 +1,29 @@
 import { Client, Message } from "discord.js";
 import { IMessageHandler } from "./interfaces";
+import gameHandlers from "./game";
+
+export abstract class MessageHandler {
+
+  static doProcessing(client: Client, message: Message) {
+
+    if (message.author.bot) {
+      return;
+    }
+
+    const handlerList = {
+      'ping': gameHandlers.PingHandler,
+      'pong': gameHandlers.PongHandler
+    }
+
+    let handler = new Handler(new DefaultHandler());
+
+    if (handlerList.hasOwnProperty(message.content)) {
+      handler.setHandler(new handlerList[message.content]());
+    }
+
+    handler.doProcessing(client, message);
+  }
+}
 
 export class Handler {
   private handler: IMessageHandler;
