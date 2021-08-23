@@ -1,6 +1,6 @@
 import { Client, Message } from "discord.js";
-import { IMessageHandler } from "./interfaces";
-import gameHandlers from "./game";
+import gameHandlers from "./message/game";
+import { MessageHandler, DefaultMessageHandler } from "./message";
 
 export abstract class Handler {
 
@@ -43,34 +43,12 @@ export abstract class Handler {
       'pong': gameHandlers.PongHandler
     }
 
-    let handler = new MessageHandler(new DefaultHandler());
+    let handler = new MessageHandler(new DefaultMessageHandler());
 
     if (handlerList.hasOwnProperty(message.content)) {
       handler.setConcreteHandler(new handlerList[message.content]());
     }
 
     handler.doProcessing(client, message);
-  }
-}
-
-export class MessageHandler {
-  private handler: IMessageHandler;
-
-  constructor(handler: IMessageHandler) {
-    this.handler = handler;
-  }
-
-  public setConcreteHandler(handler: IMessageHandler) {
-    this.handler = handler;
-  }
-
-  public doProcessing(client: Client, message: Message): void {
-    this.handler.doProcessing(client, message);
-  }
-}
-
-export class DefaultHandler implements IMessageHandler {
-  public async doProcessing(client: Client, message: Message) {
-    console.log(`Message: ${message.content} not processed`)
   }
 }
