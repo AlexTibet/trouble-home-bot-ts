@@ -2,9 +2,37 @@ import { Client, Message } from "discord.js";
 import { IMessageHandler } from "./interfaces";
 import gameHandlers from "./game";
 
-export abstract class MessageHandler {
+export abstract class Handler {
 
-  static doProcessing(client: Client, message: Message) {
+  static processReadiness(client: Client) {
+    console.log(`I am ready!\n${ client.user.username } run in:`);
+
+    for (const guild of client.guilds.cache) {
+      console.log(`\t${guild[1].name} with ${guild[1].memberCount} users`);
+    }
+
+    client.user.setActivity(
+      {
+        name: 'name',
+        type: 'WATCHING'
+      }
+    )
+      .then(
+        r => {
+          console.log(`Set status: ${ r.status }, ${ r.activities }`);
+        }
+      );
+  };
+
+  static processWarning (warn: string) {
+    console.warn(`WARNING info: ${ warn }`)
+  };
+
+  static processError (err: Error) {
+    console.error(`ERROR info: ${ err }`)
+  };
+
+  static processMessage(client: Client, message: Message) {
 
     if (message.author.bot) {
       return;
@@ -15,24 +43,24 @@ export abstract class MessageHandler {
       'pong': gameHandlers.PongHandler
     }
 
-    let handler = new Handler(new DefaultHandler());
+    let handler = new MessageHandler(new DefaultHandler());
 
     if (handlerList.hasOwnProperty(message.content)) {
-      handler.setHandler(new handlerList[message.content]());
+      handler.setConcreteHandler(new handlerList[message.content]());
     }
 
     handler.doProcessing(client, message);
   }
 }
 
-export class Handler {
+export class MessageHandler {
   private handler: IMessageHandler;
 
   constructor(handler: IMessageHandler) {
     this.handler = handler;
   }
 
-  public setHandler(handler: IMessageHandler) {
+  public setConcreteHandler(handler: IMessageHandler) {
     this.handler = handler;
   }
 
