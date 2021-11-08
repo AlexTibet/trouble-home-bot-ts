@@ -1,17 +1,16 @@
-import { Client, Message } from "discord.js";
-import { Handler } from "../handlers/base";
+import { Client, Message } from 'discord.js';
+import { Handler } from '../handlers/base';
 
 export class Bot {
   private readonly client: Client;
   private readonly token: string;
 
-  constructor() {
+  constructor(token: string) {
     this.client = new Client();
-    this.token = process.env.DISCORD_BOT_TOKEN;
-  };
+    this.token = token;
+  }
 
-  public listen(): Promise<string> {
-
+  public async listen(): Promise<string> {
     this.client.on('message', (message: Message) => {
       Handler.processMessage(this.client, message);
     });
@@ -25,9 +24,9 @@ export class Bot {
     });
 
     this.client.on('error', (err) => {
-      Handler.processError(err)
+      Handler.processError(err);
     });
 
     return this.client.login(this.token);
-  };
+  }
 }

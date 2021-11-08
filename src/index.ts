@@ -1,11 +1,12 @@
-import { config } from "dotenv";
-import { Bot } from "./bot/bot";
+import { config } from 'dotenv';
+import { Bot } from './bot/bot';
+import { doc } from './config/documentation';
 
 config();
 
-let bot = new Bot();
+const bot = new Bot(process.env.DISCORD_BOT_TOKEN);
 bot.listen().then(() => {
-  console.log('Logged in!')
+  console.log(`${doc.logging.info} Logged in!`);
 }).catch((error) => {
-  console.error('Oh no! ', error)
+  console.error(doc.logging.error, error.toString());
 });

@@ -1,5 +1,5 @@
-import { IMessageHandler } from "../interfaces";
-import { Client, Message } from "discord.js";
+import { IMessageHandler } from '../interfaces';
+import { Client, Message } from 'discord.js';
 
 export class MessageHandler {
   private handler: IMessageHandler;

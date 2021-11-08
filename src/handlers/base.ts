@@ -1,39 +1,31 @@
-import { Client, Message } from "discord.js";
-import gameHandlers from "./message/game";
-import { MessageHandler, DefaultMessageHandler } from "./message";
+import { Client, Message } from 'discord.js';
+import gameHandlers from './message/game';
+import { MessageHandler, DefaultMessageHandler } from './message';
 
 export abstract class Handler {
-
-  static processReadiness(client: Client) {
+  static async processReadiness(client: Client): Promise<void> {
     console.log(`I am ready!\n${ client.user.username } run in:`);
 
     for (const guild of client.guilds.cache) {
       console.log(`\t${guild[1].name} with ${guild[1].memberCount} users`);
     }
 
-    client.user.setActivity(
-      {
-        name: 'name',
-        type: 'WATCHING'
-      }
-    )
-      .then(
-        r => {
-          console.log(`Set status: ${ r.status }, ${ r.activities }`);
-        }
-      );
-  };
+    const activityInfo = await client.user.setActivity({
+      name: 'name',
+      type: 'WATCHING'
+    });
+    console.log(`Set status: ${ activityInfo.status }, ${ activityInfo.activities }`);
+  }
 
-  static processWarning (warn: string) {
-    console.warn(`WARNING info: ${ warn }`)
-  };
+  static async processWarning(warn: string): Promise<void> {
+    console.warn(`WARNING info: ${ warn }`);
+  }
 
-  static processError (err: Error) {
-    console.error(`ERROR info: ${ err }`)
-  };
+  static async processError(err: Error): Promise<void> {
+    console.error(`ERROR info: ${ err }`);
+  }
 
-  static processMessage(client: Client, message: Message) {
-
+  static async processMessage(client: Client, message: Message): Promise<void> {
     if (message.author.bot) {
       return;
     }
@@ -41,9 +33,9 @@ export abstract class Handler {
     const handlerList = {
       'ping': gameHandlers.PingHandler,
       'pong': gameHandlers.PongHandler
-    }
+    };
 
-    let handler = new MessageHandler(new DefaultMessageHandler());
+    const handler = new MessageHandler(new DefaultMessageHandler());
 
     if (handlerList.hasOwnProperty(message.content)) {
       handler.setConcreteHandler(new handlerList[message.content]());

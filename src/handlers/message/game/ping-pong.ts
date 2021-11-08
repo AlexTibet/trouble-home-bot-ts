@@ -1,5 +1,5 @@
-import { Client, Message } from "discord.js";
-import { IMessageHandler } from "../../interfaces";
+import { Client, Message } from 'discord.js';
+import { IMessageHandler } from '../../interfaces';
 
 export class PingHandler implements IMessageHandler {
   public async doProcessing(client: Client, message: Message) {
@@ -9,6 +9,6 @@ export class PingHandler implements IMessageHandler {
 
 export class PongHandler implements IMessageHandler {
   public async doProcessing(client: Client, message: Message) {
-    await message.channel.send(`ping ${message.author.toString()}`)
+    await message.channel.send(`ping ${message.author.toString()}`);
   }
 }
