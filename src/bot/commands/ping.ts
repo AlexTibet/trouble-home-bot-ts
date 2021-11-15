@@ -13,16 +13,14 @@
 // };
 
 import { Message } from 'discord.js';
-import { ICommand } from './index';
+import { ICommand } from '../interfaces';
 
 const command: ICommand = {
-  name: 'pong',
+  name: 'ping',
   description: 'Pong!',
   async execute(message: Message, args: string[]) {
-    await message.channel.send('Ping');
-    console.log('send(\'Ping\');');
-    console.log(args);
+    await message.channel.send('Pong');
   }
 };
 
-export = command
+export = command;
