@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { Bot } from './bot/bot';
+import { Bot } from './bot';
 import { doc } from './config/documentation';
 
 config();
