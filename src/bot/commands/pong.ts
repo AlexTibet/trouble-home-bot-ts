@@ -5,7 +5,7 @@ const command: ICommand = {
   name: 'pong',
   description: 'Ping!',
   async execute(message: Message, args: string[]) {
-    await message.channel.send('Ping');
+    await message.channel.send(`${message.author.toString()} Ping!`);
   }
 };
 
