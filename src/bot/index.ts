@@ -10,7 +10,7 @@ export class Bot {
   public readonly commands: Collection<string, ICommand>;
 
   constructor(token: string) {
-    this.client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+    this.client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
     this.token = token;
     this.commands = new Collection();
 
@@ -57,9 +57,7 @@ export class Bot {
         return;
       }
 
-      const [commandName, ...args] = message.content
-        .slice(prefix.length)
-        .split(/ +/);
+      const [commandName, ...args] = message.content.slice(prefix.length).split(/ +/);
       console.log(commandName, args);
 
       const command = this.commands.find((command) => command.name === commandName);
