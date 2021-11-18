@@ -1,5 +1,4 @@
 import { Client, Collection, Intents, Message } from 'discord.js';
-import { Handler } from '../handlers/base';
 import { ICommand, IEvent } from './interfaces';
 import * as fs from 'fs';
 
@@ -58,19 +57,11 @@ export class Bot {
       }
 
       const [commandName, ...args] = message.content.slice(prefix.length).split(/ +/);
-      console.log(commandName, args);
-
       const command = this.commands.find((command) => command.name === commandName);
 
       if (command) {
         command.execute(message, args);
       }
-
-      // Handler.processMessage(this.client, message);
-    });
-
-    this.client.on('error', (err) => {
-      Handler.processError(err);
     });
 
     return this.client.login(this.token);
