@@ -1,17 +1,26 @@
 import { Message } from 'discord.js';
+import options from '../../config/options';
+import { CommandHandler } from './CommandHandler';
+import { OtherHandler } from './OtherHandler';
+import { Handler } from './Handler';
+
 
 export class MessageHandler {
-  message: Message;
-  // handler: Handler;
+  handler: Handler;
 
   constructor(message: Message) {
-    this.message = message;
+    this.handler = this.selectHandler(message);
   }
-  async baseHandler(): Promise<void> {
-    console.log(this.message.content);
+
+  selectHandler(message: Message): Handler {
+    if (message.content.startsWith(options.commands.prefix)) {
+      return new CommandHandler(message);
+    } else {
+      return new OtherHandler(message);
+    }
   }
 
   async execute(): Promise<void> {
-    await this.baseHandler();
+    await this.handler.execute();
   }
 }
