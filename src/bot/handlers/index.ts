@@ -2,6 +2,7 @@ import { Message } from 'discord.js';
 
 export class MessageHandler {
   message: Message;
+  // handler: Handler;
 
   constructor(message: Message) {
     this.message = message;
