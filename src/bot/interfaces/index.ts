@@ -1,8 +1,8 @@
-import { Client, Message } from 'discord.js';
+import { Message } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 export interface ICommand {
-  name: string
-  description: string
+  data: SlashCommandBuilder
   // Making `args` optional
   execute(message: Message, args?: string[]): Promise<void>
 }

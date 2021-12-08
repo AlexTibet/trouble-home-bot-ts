@@ -1,4 +1,7 @@
 import { Client, Collection, Intents } from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+
 import { ICommand, IEvent } from './interfaces';
 import * as fs from 'fs';
 
@@ -16,6 +19,9 @@ export class Bot {
 
     this.uploadCommands().then(() => {
       console.log('Commands uploaded', this.commands.keys());
+      this.deployCommands().then(() => {
+        console.log('Commands deployed', this.commands.keys());
+      });
     });
     this.uploadEvents().then(() => {
       console.log('Events uploaded', this.events.keys());
@@ -31,8 +37,21 @@ export class Bot {
 
     for (const file of commandFiles) {
       const command = await import(`${__dirname}/commands/${file}`) as ICommand;
-      this.commands.set(command.name, command);
+      this.commands.set(command.data.name, command);
     }
+  }
+
+  async deployCommands(): Promise<void> {
+    const commands = [];
+    for (const commandName of this.commands.keys()) {
+      const command = this.commands.get(commandName);
+      commands.push(command.data.toJSON());
+    }
+
+    const rest = new REST({ version: '9' }).setToken(this.token);
+    rest.put(Routes.applicationGuildCommands('704397732730634302', '585729392907517962'), { body: commands })
+        .then(() => console.log('Successfully registered application commands.'))
+        .catch(console.error);
   }
 
   async uploadEvents(): Promise<void> {
